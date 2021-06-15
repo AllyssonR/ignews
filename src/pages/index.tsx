@@ -1,13 +1,26 @@
 import Head from "next/head";
+import { SubcribeButton } from "../Components/SignInButton/SubscribeButton";
+import styles from "./home.module.scss";
 export default function Home() {
   return (
     <>
       <Head>
-        <title>Inicio|ig.news</title>
+        <title>Home|ig.news</title>
       </Head>
-      <div>
-        hello world
-      </div>
+      <main className={styles.contentContainer}>
+        <section className={styles.hero}>
+          <span>👏 Hey ,welcome </span>
+          <h1>
+            News about the <span>React</span> Word.
+          </h1>
+          <p>
+            Get access to all publications <br />
+            <span> for $9.90 month</span>
+          </p>
+          <SubcribeButton />
+        </section>
+        <img src="/images/avatar.svg" alt="Girl coding" />
+      </main>
     </>
   );
 }
