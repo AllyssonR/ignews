@@ -1,7 +1,7 @@
+import styles from "./home.module.scss";
 import Head from "next/head";
 import { SubcribeButton } from "../Components/SignInButton/SubscribeButton";
 import { GetStaticProps } from "next/";
-import styles from "./home.module.scss";
 import { stripe } from "../Services/stripe";
 
 interface HomeProps {
@@ -46,6 +46,6 @@ export const getStaticProps: GetStaticProps = async () => {
     props: {
       product,
     },
-    revalidate: 60*60*24 // 24 hours
+    revalidate: 60 * 60 * 24, // 24 hours
   };
 };
