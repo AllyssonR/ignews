@@ -1,22 +1,7 @@
 * {
+  margin: 0; //this is global configuration css to apply
   padding: 0;
-  margin: 0;
   box-sizing: border-box;
-}
-@media (max-width: 1080px) {
-  html {
-    font-size: 93.75%;
-  }
-}
-@media (max-width: 720px) {
-  html {
-    font-size: 87.5%;
-  }
-}
-body {
-  color: var(--white);
-  background-color: var(--gray-900);
-  font-family: "Roboto", sans-serif;
 }
 :root {
   --white: #ffffff;
@@ -28,12 +13,26 @@ body {
   --cyan-500: #61dafb;
   --yellow-500: #eba417;
 }
+body {
+  background: var(--gray-900);
+  color: var(--white);
+}
+@media (max-width: 1080px) {
+  html {
+    font-size: 93.75%; //1rem = 16px 93.75% is equal to 15px that modification is for better user accessibility
+  }
+}
+@media (max-width: 720px) {
+  html {
+    font-size: 87.5%; //1rem = 16px 93.75% is equal to 14px
+  }
+}
 body,
 input,
 textarea,
 select,
 button {
-  font-weight: 400 1rem "Roboto", sans-serif;
+  font: 400 1rem 'Roboto', sans-serif;
 }
 
 button {
@@ -42,5 +41,5 @@ button {
 
 a {
   color: inherit;
-  text-decoration: node;
+  text-decoration: none;
 }

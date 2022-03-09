@@ -1,51 +1,60 @@
-import styles from "./home.module.scss";
-import Head from "next/head";
-import { SubcribeButton } from "../Components/SignInButton/SubscribeButton";
-import { GetStaticProps } from "next/";
-import { stripe } from "../Services/stripe";
+import { GetStaticProps } from 'next'
+import Head from 'next/head'
+import Image from 'next/image'
+import { SubscribeButton } from '../Components/SubscribeButton'
+import styles from './home.module.scss'
+import { stripe } from '../Services/stripe'
 
-interface HomeProps {
+type HomeProps = {
   product: {
-    priceId: string;
-    amount: number;
-  };
+    priceId: string
+    amount: number
+  }
 }
 export default function Home({ product }: HomeProps) {
   return (
     <>
       <Head>
-        <title>Home | ig.news</title>
+        <title>Inicio | ig.news</title>
       </Head>
       <main className={styles.contentContainer}>
         <section className={styles.hero}>
-          <span>👏 Hey ,welcome </span>
+          <span>👋 Hey, Welcome</span>
           <h1>
-            News about the <span>React</span> Word.
+            News about <br /> The <span>React</span> World.
           </h1>
           <p>
-            Get access to all publications <br />
-            <span> for {product.amount} month</span>
+            Get access to all the publications <br />
+            <span>for {product.amount} mouth</span>
           </p>
-          <SubcribeButton priceId={product.priceId} />
+          <SubscribeButton priceId={product.priceId} />
         </section>
-        <img src="/images/avatar.svg" alt="Girl coding" />
+        <Image
+          src="/images/avatar.svg"
+          height={520}
+          width={334}
+          alt="girl coding"
+        />
       </main>
     </>
-  );
+  )
 }
+
 export const getStaticProps: GetStaticProps = async () => {
-  const price = await stripe.prices.retrieve("price_1J2hktAqwIHWWpBIw83Z7vwS");
+  const price = await stripe.prices.retrieve('price_1J2hktAqwIHWWpBIw83Z7vwS')
   const product = {
     priceId: price.id,
-    amount: new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: "USD",
-    }).format(price.unit_amount / 100),
-  };
+    amount: price.unit_amount
+      ? new Intl.NumberFormat('en-US', {
+          style: 'currency',
+          currency: 'USD'
+        }).format(price.unit_amount / 100)
+      : 'error'
+  }
   return {
     props: {
-      product,
+      product
     },
-    revalidate: 60 * 60 * 24, // 24 hours
-  };
-};
+    revalidate: 60 * 60 * 24 // revalidate every 24 hours
+  }
+}

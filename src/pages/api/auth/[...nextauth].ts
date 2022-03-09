@@ -1,46 +1,49 @@
-import NextAuth from "next-auth";
-import Providers from "next-auth/providers";
-import { fauna } from "../../../Services/fauna";
-import { query } from "faunadb";
-//import { signIn } from "next-auth/client";
+import NextAuth from 'next-auth'
+import GithubProvider from 'next-auth/providers/github'
+import { query } from 'faunadb'
+import { fauna } from '../../../Services/fauna'
 export default NextAuth({
   // Configure one or more authentication providers
   providers: [
-    Providers.GitHub({
-      clientId: process.env.GITHUB_CLIENT_ID,
-      clientSecret: process.env.GITHUB_CLIENT_SECRET,
-      scope: "read:user",
-    }),
-
-    // ...add more providers here
+    GithubProvider({
+      clientId: process.env.GITHUB_ID,
+      clientSecret: process.env.GITHUB_SECRET,
+      authorization: {
+        params: {
+          scope: 'read:user'
+        }
+      }
+    })
   ],
+
   callbacks: {
-    async signIn(user, account, profile) {
-      const { email } = user;
+    async signIn({ user }) {
+      const { email } = user
+
       try {
         await fauna.query(
           query.If(
             query.Not(
               query.Exists(
                 query.Match(
-                  query.Index("user_by_email"),
-                  query.Casefold(user.email)
+                  query.Index('user_by_email'),
+                  query.Casefold(String(email))
                 )
               )
             ),
-            query.Create(query.Collection("users"), { data: { email } }),
+            query.Create(query.Collection('users'), { data: { email } }),
             query.Get(
               query.Match(
-                query.Index("user_by_email"),
-                query.Casefold(user.email)
+                query.Index('user_by_email'),
+                query.Casefold(String(email))
               )
             )
           )
-        );
-        return true;
+        )
+        return true
       } catch {
-        return false;
+        return false
       }
-    },
-  },
-});
+    }
+  }
+})
