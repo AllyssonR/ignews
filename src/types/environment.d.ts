@@ -4,6 +4,7 @@ declare global {
       STRIPE_API_KEY: string
       NEXT_PUBLIC_STRIPE_PUBLIC_KEY: string
       STRIPE_WEBHOOK_SECRET: string
+      PRISMIC_ACCESS_TOKEN: string
       GITHUB_ID: string
       GITHUB_SECRET: string
       FAUNADB_KEY: string
