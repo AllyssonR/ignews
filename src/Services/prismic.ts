@@ -1,7 +1,11 @@
-import Prismic from '@prismicio/client'
+import * as Prismic from '@prismicio/client'
+export const endpoint = process.env.PRISMIC_ENDPOINT
+export const repositoryName = Prismic.getRepositoryName(endpoint)
 
-export function getPrismicClient() {
-  const prismic = Prismic.Client(process.env.PRISMIC_ACCESS_TOKEN, {
+// Update the link Resolver to match your project's route strutures.
+
+export function createClient() {
+  const prismic = Prismic.createClient(process.env.PRISMIC_ENDPOINT, {
     accessToken: process.env.PRISMIC_ACCESS_TOKEN
   })
   return prismic

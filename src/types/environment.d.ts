@@ -3,6 +3,7 @@ declare global {
     interface ProcessEnv {
       STRIPE_API_KEY: string
       NEXT_PUBLIC_STRIPE_PUBLIC_KEY: string
+      PRISMIC_ENDPOINT: string
       STRIPE_WEBHOOK_SECRET: string
       PRISMIC_ACCESS_TOKEN: string
       GITHUB_ID: string
