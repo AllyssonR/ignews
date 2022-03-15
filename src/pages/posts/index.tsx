@@ -1,9 +1,18 @@
 import { GetStaticProps } from 'next'
 import Head from 'next/head'
-import { createClient } from '../../Services/prismic'
-import Prismic from '@prismicio/client'
 import styles from './styles.module.scss'
-export default function Posts() {
+import { getPrismicClient } from '../../Services/prismic'
+import { RichText } from 'prismic-dom'
+type Post = {
+  slug: string
+  title: string
+  excerpt: string
+  updatedAt: string
+}
+type PostsProps = {
+  posts: Post[]
+}
+export default function Posts({ posts }: PostsProps) {
   return (
     <>
       <Head>
@@ -11,46 +20,13 @@ export default function Posts() {
       </Head>
       <main className={styles.container}>
         <div className={styles.posts}>
-          <a href="#">
-            <time>12 de março de 2021</time>
-            <strong>
-              Creating a Monorepo with Lerna &amp; Yarn Workspaces
-            </strong>
-            <p>
-              in this guide , you will learn how to create a Monorepo to menage
-              multple packages with a shared business
-            </p>
-          </a>{' '}
-          <a href="#">
-            <time>12 de março de 2021</time>
-            <strong>
-              Creating a Monorepo with Lerna &amp; Yarn Workspaces
-            </strong>
-            <p>
-              in this guide , you will learn how to create a Monorepo to menage
-              multple packages with a shared business
-            </p>
-          </a>{' '}
-          <a href="#">
-            <time>12 de março de 2021</time>
-            <strong>
-              Creating a Monorepo with Lerna &amp; Yarn Workspaces
-            </strong>
-            <p>
-              in this guide , you will learn how to create a Monorepo to menage
-              multple packages with a shared business
-            </p>
-          </a>{' '}
-          <a href="#">
-            <time>12 de março de 2021</time>
-            <strong>
-              Creating a Monorepo with Lerna &amp; Yarn Workspaces
-            </strong>
-            <p>
-              in this guide , you will learn how to create a Monorepo to menage
-              multple packages with a shared business
-            </p>
-          </a>
+          {posts.map((post) => (
+            <a key={post.slug} href="#">
+              <time>{post.updatedAt}</time>
+              <strong>{post.title}</strong>
+              <p>{post.excerpt}</p>
+            </a>
+          ))}
         </div>
       </main>
     </>
@@ -58,16 +34,29 @@ export default function Posts() {
 }
 
 export const getStaticProps: GetStaticProps = async () => {
-  const prismic = createClient()
+  const prismic = getPrismicClient()
 
-  const response = await prismic.get(
-    [Prismic.predicates.at('document.type', 'publication')],
-    {
-      fetch: ['publication.title', 'publication.content']
+  const response = await prismic.getAllByType('publication', { pageSize: 100 })
+  const posts = response.map((post) => {
+    return {
+      slug: post.uid,
+      title: RichText.asText(post.data.title),
+      excerpt:
+        post.data.content.find(
+          (content: { type: string }) => content.type === 'paragraph'
+        )?.text ?? '',
+      updatedAt: new Date(post.last_publication_date).toLocaleDateString(
+        'pt-BR',
+        {
+          day: '2-digit',
+          month: 'long',
+          year: 'numeric'
+        }
+      )
     }
-  )
-  console.log(response)
+  })
   return {
-    props: {}
+    props: { posts },
+    revalidate: 60 * 60
   }
 }
