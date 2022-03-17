@@ -12,6 +12,5 @@ export function ActiveLink({
 }: ActiveLinkPops) {
   const { asPath } = useRouter()
   const className = asPath === rest.href ? activeClassName : ''
-  console.log(className, rest.href)
   return <Link {...rest}>{cloneElement(children, { className })}</Link>
 }
