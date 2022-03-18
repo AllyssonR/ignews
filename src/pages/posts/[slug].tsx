@@ -37,6 +37,14 @@ export const getServerSideProps: GetServerSideProps = async ({
   params
 }) => {
   const session = await getSession({ req })
+  if (!session.activeSubscription) {
+    return {
+      redirect: {
+        destination: '/',
+        permanent: false
+      }
+    }
+  }
   const { slug } = params
   const prismic = getPrismicClient()
   const response = await prismic.getByUID('publication', String(slug), {})
@@ -48,7 +56,7 @@ export const getServerSideProps: GetServerSideProps = async ({
       'pt-BR',
       {
         day: '2-digit',
-        month: 'numeric',
+        month: 'long',
         year: 'numeric'
       }
     )
