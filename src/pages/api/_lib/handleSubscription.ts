@@ -8,12 +8,14 @@ export async function saveSubscription(
 ) {
   // Buscar o usuario no banco do FaunaDB com ID {costumerId}
   // Salvar os dados da subscription no faunaDB
+
   const userRef = await fauna.query(
     q.Select(
       'ref',
       q.Get(q.Match(q.Index('user_by_stripe_customer_id'), customerId)) // nessa foi adquidira o somente a referencia do usuario no faunaDB
     )
   )
+
   const subscription = await stripe.subscriptions.retrieve(subscriptionId) // nessa linha foi pega toda a informação do usuario no stripe
   const subscriptionData = {
     id: subscription.id,

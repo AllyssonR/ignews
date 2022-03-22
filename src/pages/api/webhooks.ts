@@ -21,10 +21,10 @@ const relevantEvents = new Set([
   'customer.subscription.updated',
   'customer.subscription.deleted'
 ])
-export default async (require: NextApiRequest, response: NextApiResponse) => {
-  if (require.method === 'POST') {
-    const buf = await buffer(require)
-    const secret = require.headers['stripe-signature']
+export default async (request: NextApiRequest, response: NextApiResponse) => {
+  if (request.method === 'POST') {
+    const buf = await buffer(request)
+    const secret = request.headers['stripe-signature']
 
     let event: Stripe.Event
     try {
